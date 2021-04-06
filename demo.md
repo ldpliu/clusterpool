@@ -1,6 +1,9 @@
 ## Demo:
-we want to demo the rbac prototype about clusterset managedclusters and clusterpool
-we define three role: cluster-admin(gurney) team-admin(le jian) tem-user(dangpeng)
+I will demo the rbac prototype about clusterset managedclusters and clusterpool
+we define three Persona: cluster-admin(gurney) team-admin(le jian) team-user(dangpeng)
+we use gurney as cluster-admin, le and jian is team-admin, dangpeng is team-user
+
+
 
 ## Cluster-admin Create clusterset
 oc adm policy add-cluster-role-to-user cluster-admin gurney
@@ -8,7 +11,7 @@ oc adm policy add-cluster-role-to-user cluster-admin gurney
 cat cluster-admin/managedclusterset.yaml
 oc create -f cluster-admin/managedclusterset.yaml --as gurney
 
-[Note] after the clustersert create, we will create two clusterrole, clusterset admin, clusterset view
+[Note] after the clusterset created, we will create two clusterrole, clusterset admin, clusterset view
 
 kubectl get clusterrole| grep set
 
@@ -19,8 +22,11 @@ oc adm policy add-cluster-role-to-user open-cluster-management:clusterset-view:s
 ##//oc adm policy add-cluster-role-to-user self-provisioner le jian --as gurney
 
 
+
+
+
 ## team-admin create cluster
-[Note] then For team-admin, when he create a managedcluster, he must set the clusterset label. or it will be denied. lets try to create a managedcluster which has no set label. and it will fail
+[Note] Then for team-admin, if he want to create managedcluster, he must set the clusterset label. if not,  the create request will be denied. lets try to create a managedcluster which has no set label. and it will fail
 
 cat team-admin/managedcluster-nolabel.yaml
 oc create -f team-admin/managedcluster-nolabel.yaml --as le
@@ -31,14 +37,18 @@ kubectl create -f team-admin/managedcluster-set-donot-exist.yaml --as le
 cat team-admin/managedcluster-label.yaml
 oc create -f team-admin/managedcluster-label.yaml --as le
 
-## team-admin create deployment
-[Note]then team-admin need to create a clusterdeployment, same as managedlcuster, the clusterdeployment should also have clusterset label. or it will be denied.
+## team-admin create clusterdeployment
+[Note]after the managedcluster created, then team-admin need to create a clusterdeployment to provision a  cluster, same as managedlcuster, the clusterdeployment should also have clusterset label. 
 
 cat team-admin/clusterdeployment-nolabel.yaml
 oc create -f team-admin/clusterdeployment-nolabel.yaml --as le
 
 cat team-admin/clusterdeployment-label.yaml
 oc create -f team-admin/clusterdeployment-label.yaml --as le
+
+
+
+
 
 ######################################## view
 ### another team-admin edit managedcluster
@@ -60,6 +70,10 @@ oc annotate clusterdeployment managedcluster1 -n managedcluster1 a1=b --as dangp
 
 
 
+In this scario, we create a mangaecluster and use clusterdeployment to provision a managedcluster.
+
+Then we will demo to use clusterpool and clusterclaim to provision clusters.
+Firstlly, gurney need to create a project for clusterpool and clusterclaim.
 
 
 
@@ -77,16 +91,19 @@ oc adm policy add-cluster-role-to-user open-cluster-management:clusterset-view:s
 -----------------
 
 
-Then we will demo clusterpool and clusterclaim. firstlly, gurney need to create a namespace for 
-clusterpool and clusterclaim.
-
 ## Cluster-admin create ns and grant permission
 oc adm new-project server-foundation-clusterpool --as gurney
 oc adm policy add-role-to-user admin  --namespace  server-foundation-clusterpool le jian --as gurney
 
+[note]cluster-admin also can give self-provisioner permission to team-admin, then team-admin can create the project by themselves
+
+
+
+
 ## team-admin create Clusterpool 
 oc create secret generic server-foundation-aws-creds -n server-foundation-clusterpool --from-literal=aws_access_key_id=${AWS_ACCESS_KEY_ID} --from-literal=aws_secret_access_key=${AWS_SECRET_ACCESS_KEY} --as le
 oc create secret generic server-foundation-ocp-pull-secret --from-file=.dockerconfigjson=team-admin/clusterpool/pull-secret.txt --type=kubernetes.io/dockerconfigjson -n server-foundation-clusterpool --as le
+
 
 cat team-admin/clusterpool/clusterpool-nolabel.yaml
 oc create -f team-admin/clusterpool/clusterpool-nolabel.yaml --as le
@@ -95,14 +112,20 @@ cat team-admin/clusterpool/clusterpool-label.yaml
 oc create -f team-admin/clusterpool/clusterpool-label.yaml --as le
 
 
-oc get clusterdeployment --all-namespaces 
+oc get clusterdeployment --all-namespaces
 
 ## team-admin create Claim
 cat team-admin/clusterpool/clustercliam.yaml
 oc create -f team-admin/clusterpool/clustercliam.yaml --as le
 
 
-[Note] after clusterclaim and clusterdeployment created, we will add the clusterset lable to claim and clusterdeployment, so clusterset admin and clusterset view will has permission to access them.
+[Note] after clusterclaim and clusterdeployment created, we will add the clusterset lable to clusterclaim and clusterdeployment, and claim and clusterdeployment will be added to this set. so clusterset admin and clusterset view will has permission to access them.
+
+Then let's use other team member to access the clusterpool
+
+
+
+
 
 ## another team-admin get clusterdeployment
 oc get clusterpool -n server-foundation-clusterpool --as jian
@@ -117,4 +140,9 @@ oc get project --as jian
 oc get project --as dangpeng
 
 oc get clusterdeployment --all-namespaces
+
+oc get clusterdeployment 
+
+
+set delete/ delete resource ?
 

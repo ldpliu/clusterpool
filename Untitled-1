@@ -1,0 +1,11 @@
+
+export CLUSTERPOOL_TARGET_NAMESPACE=server-foundation
+export PLATFORM=AWS 
+export CLOUD_CREDENTIAL_SECRET=server-foundation-aws-creds
+export OCP_PULL_SECRET=server-foundation-ocp-pull-secret
+export CLUSTERIMAGESET_NAME=img4.6.16-x86-64-appsub
+export CLUSTERPOOL_SIZE=3
+export CLUSTERPOOL_NAME=server-foundation-aws
+# AWS Specific
+export CLUSTERPOOL_AWS_REGION=us-east-1
+export CLUSTERPOOL_AWS_BASE_DOMAIN=dev04.red-chesterfield.com
