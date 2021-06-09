@@ -9,3 +9,6 @@ export CLUSTERPOOL_NAME=server-foundation-aws
 # AWS Specific
 export CLUSTERPOOL_AWS_REGION=us-east-1
 export CLUSTERPOOL_AWS_BASE_DOMAIN=dev04.red-chesterfield.com
+
+
+

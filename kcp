@@ -1,0 +1,26 @@
+Our intention is that our experiments improve Kubernetes for everyone, by improving CRDs and scaling resource watching, and enabling more, better controllers for everyone, whether you're using Kubernetes as a container orchestrator or not.
+
+
+
+    kcp, which serves a Kubernetes-style API with a minimum of built-in types.
+    cluster-controller, which along with the Cluster CRD allows kcp to connect to other full-featured Kubernetes clusters, and includes these components:
+        syncer, which runs on Kubernetes clusters registered with the cluster-controller, and watches kcp for resources assigned to the cluster
+        deployment-splitter, which demonstrates a controller that can split a Deployment object into multiple "virtual Deployment" objects across multiple clusters.
+        crd-puller which demonstrates mirroring CRDs from a cluster back to kcp
+
+
+
+Multi-Cluster Kubernetes?
+
+kcp could be useful for multi-cluster scenarios, by running kcp as a control plane outside of any of your workload clusters.
+Multi-Tenant Kubernetes?
+
+kcp could be useful for multi-tenancy scenarios, by allowing multiple tenant clusters inside a cluster to be managed by a single kcp control plane.
+Local Kubernetes Development?
+
+kcp could be useful for local development scenarios, where you don't necessarily care about all of Kubernetes' many built-in resources and their reconciling controllers.
+Embedded/low-resource scenarios?
+
+kcp could be useful for environments where resources are scarce, by limiting the number of controllers that need to run. Kubernetes' asynchronous reconciliation pattern can also be very powerful in disconnected or intermittently connected environments, regardless of how workloads actually run.
+
+

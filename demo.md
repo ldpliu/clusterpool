@@ -22,9 +22,6 @@ oc adm policy add-cluster-role-to-user open-cluster-management:managedclusterset
 ##//oc adm policy add-cluster-role-to-user self-provisioner le jian --as gurney
 
 
-
-
-
 ## team-admin create cluster
 [Note] Then for team-admin, if he want to create managedcluster, he must set the clusterset label. if not,  the create request will be denied. lets try to create a managedcluster which has no set label. and it will fail
 
